@@ -1,0 +1,18 @@
+This small APP is the backend code for Store Monitoring.
+
+How this app work's?
+=> First we take the csv files and load them to sqlite3 database. I'm using sqlite3 because it's light weight and it comes pre installed with python.
+    No need to setup a new database.
+=> While loading the data, for the CSV store_status I'm extracting time and day from UTC timestamp after converting the UTC to the store_id's timezone.
+    This help's in querying the data efficiently.
+=> I'm executing 3 main SQl queries that extract the needed data from the database. The logic is that I first calculate the last_week start and end date and 
+    while querying the store status I pass these values as well as the conditon that the poll time must be between start_time_local and end_time_local.
+=> I'm counting the nuber of times above value is true/or returns the data. Here 1 count means 1 HR as I have observed some descrepencies in the given data that 
+    I have mentioned below.
+
+descrepencies in data:
+1) In store_hours(the csv that contains the business hours) has a entry in which for the same store_id, day it has two different business hours.
+=> Solution: Ignored the second entry.
+2) As the instruction said that the polling is done at 11:15 so in that case the business hours between 09:00:00 - 18:00:00 should have 8 polls but I have 
+    noticed that there are more than 8 with status as active..
+=> Solution: Ignroed for now.
